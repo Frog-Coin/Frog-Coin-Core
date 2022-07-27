@@ -1,0 +1,9 @@
+Building FrogCoin
+
+See doc/readme-qt.rst for instructions on building FrogCoin QT,
+the intended-for-end-users, nice-graphical-interface, reference
+implementation of FrogCoin.
+
+See doc/build-*.txt for instructions on building FrogCoind,
+the intended-for-services, no-graphical-interface, reference
+implementation of FrogCoin.
