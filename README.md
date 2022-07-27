@@ -40,18 +40,20 @@ FrogCoin uses
 
 General Specs
 
-	Coin Name: FrogCoin
+	Coin Name: Frog Coin
 	Ticker: FROG
-	Block Spacing: 5 Minutes
-	Stake Minimum Age: 40 Confirmations (PoS-v3) | 6 Hours (PoS-v2)
-	PoW/PoS Reward: 0.1 FROG (Per-block)
-	MasterNode Reward: OFF (To be Announced)
-	DevOps Fees: OFF (To be Announced)
-	Maximum Coin Count: ~10-Million FROG
-	Premine Coin Count: 0.725-Million FROG (used for - Airdrop (mostly), Graphics, Coding, and operating costs)
-	Mineable/Mintable Coin Count: ~9-Million FROG
-	Port: 20375
-	RPC Port: 20425
+	Block Spacing: 2 Minutes
+	Stake Minimum Age: 60 Confirmations (PoS-v3) | 2 Hours (PoS-v2)
+	Block Reward: 225 FROG
+	PoW/PoS Reward: 150 FROG 
+	MasterNode Reward: 70 FROG
+	Dev/donation: 5 FROG
+	MasterNode Collateral: 75,000 (500 blocks of 150 pow/pos)
+	Maximum Coin Count: 1 billion FROG
+	Premine Coin Count: 15 Million (used for - Discord Airdrop, Compititions, Coding, and operating costs)
+	Mineable/Mintable Coin Count: 990,000,000 FROG (16.9 year coin)
+	Port: TBD
+	RPC Port: TBD 
 
 
 BUILD LINUX
