@@ -135,6 +135,8 @@ rpcport=20925
 port=20995
 rpcconnect=127.0.0.1
 rpcallowip=127.0.0.1
+addnode=172.105.121.51:20995
+addnode=173.230.156.35:20995
 CONFIG
 chmod 700 ~/.FROG/FrogCoin.conf; chmod 700 ~/.FROG; ls -la ~/.FROG
 ```
