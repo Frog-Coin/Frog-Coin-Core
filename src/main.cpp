@@ -2674,7 +2674,7 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
     // Fork toggle for payment upgrade
     if(pindexBest->GetBlockTime() > 0)
     {
-        if(pindexBest->GetBlockTime() > 725)
+        if(pindexBest->GetBlockTime() > 300)
         {
             bDevOpsPayment = true;
         }
@@ -2688,7 +2688,7 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
         bDevOpsPayment = false;
     }
     // Run checks if at fork height
-    if(nBestHeight > 725 && (nMasterNodeChecksDelayBaseTime + nMasterNodeDelay) < GetTime())
+    if(nBestHeight > 300 && (nMasterNodeChecksDelayBaseTime + nMasterNodeDelay) < GetTime())
     {
         int64_t nStandardPayment = 0;
         int64_t nMasternodePayment = 0;

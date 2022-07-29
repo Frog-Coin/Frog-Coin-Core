@@ -339,7 +339,7 @@ void VRX_ThreadCurve(const CBlockIndex* pindexLast, bool fProofOfStake)
         if(fDebug) VRXswngdebug(fProofOfStake);
 
         // Version 1.2 Extended Curve Run Upgrade
-        if(pindexLast->nHeight > 500) {
+        if(pindexLast->nHeight > 300) {
             // Set unbiased comparison
             difTime = blkTime - cntTime;
             // Run Curve
@@ -385,12 +385,6 @@ void VRX_Dry_Run(const CBlockIndex* pindexLast)
     if (nLiveForkToggle != 0) {
         // Do nothing
     }// TODO setup next testing fork
-
-    // Masternode Payment Enforcement Update
-    if (pindexBest->nHeight == 725) {
-        fDryRun = true;
-        return; // enforce mn payment checks
-    }
 
     // Standard, non-Dry Run
     fDryRun = false;

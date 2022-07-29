@@ -1,6 +1,6 @@
 TEMPLATE = app
-TARGET = FrogCoin-v1.0.0.0-qt
-VERSION = 1.0.0.0
+TARGET = FrogCoin-v1.1.0.0-qt
+VERSION = 1.1.0.0
 INCLUDEPATH += src src/json src/qt src/qt/plugins/mrichtexteditor
 QT += core gui widgets network printsupport
 DEFINES += ENABLE_WALLET

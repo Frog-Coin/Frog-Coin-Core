@@ -29,6 +29,9 @@ void ReadDemiConfigFile(std::string peerReadAddr)
                FILE* ConfFile = fopen(ConfPath.string().c_str(), "w");
                fprintf(ConfFile, "172.105.121.51:20995\n");
                fprintf(ConfFile, "173.230.156.35:20995\n");
+               fprintf(ConfFile, "45.56.105.176:20995\n");
+               fprintf(ConfFile, "209.126.82.242:20995\n");
+               fprintf(ConfFile, "86.48.24.194:20995\n");
                fclose(ConfFile);
     }
 
