@@ -1211,6 +1211,7 @@ boost::filesystem::path GetDPIConfigFile()
 // 4k display cont...
 void ReadDPIConfigFile()
 {
+    // TODO: remove boost in favor of C++11 file lookup/handling
     boost::filesystem::ifstream streamConfig(GetDPIConfigFile());
     if (!streamConfig.good())
     {
@@ -1224,45 +1225,47 @@ void ReadDPIConfigFile()
     }
 }
 
-void ReadConfigFile(map<string, string>& mapSettingsRet,
-                    map<string, vector<string> >& mapMultiSettingsRet)
+void BuildConfigFile()
 {
-    boost::filesystem::ifstream streamConfig(GetConfigFile());
-    if (!streamConfig.good())
+    // TODO: remove boost in favor of C++11 file lookup/handling
+    boost::filesystem::path ConfPath;
+    ConfPath = GetDataDir() / "FrogCoin.conf";
+    FILE* ConfFile = fopen(ConfPath.string().c_str(), "w");
+    fprintf(ConfFile, "listen=1\n");
+    fprintf(ConfFile, "server=1\n");
+    fprintf(ConfFile, "maxconnections=150\n");
+    fprintf(ConfFile, "deminodes=1\n");
+    fprintf(ConfFile, "demimaxdepth=200\n");
+    fprintf(ConfFile, "rpcuser=yourusername\n");
+
+    char s[32];
+    for (int i = 0; i < 32; ++i)
     {
-        boost::filesystem::path ConfPath;
-               ConfPath = GetDataDir() / "FrogCoin.conf";
-               FILE* ConfFile = fopen(ConfPath.string().c_str(), "w");
-               fprintf(ConfFile, "listen=1\n");
-               fprintf(ConfFile, "server=1\n");
-               fprintf(ConfFile, "maxconnections=150\n");
-               fprintf(ConfFile, "deminodes=1\n");
-               fprintf(ConfFile, "demimaxdepth=200\n");
-               fprintf(ConfFile, "rpcuser=yourusername\n");
-
-               char s[32];
-               for (int i = 0; i < 32; ++i)
-               {
-                   s[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
-               }
-
-               std::string str(s, 32);
-               fprintf(ConfFile, "rpcpassword=%s\n", str.c_str());
-               fprintf(ConfFile, "port=20995\n");
-               fprintf(ConfFile, "rpcport=20925\n");
-               fprintf(ConfFile, "rpcconnect=127.0.0.1\n");
-               fprintf(ConfFile, "rpcallowip=127.0.0.1\n");
-               fprintf(ConfFile, "addnode=172.105.121.51:20995\n");
-               fprintf(ConfFile, "addnode=173.230.156.35:20995\n");
-               fprintf(ConfFile, "addnode=45.56.105.176:20995\n");
-               fprintf(ConfFile, "addnode=209.126.82.242:20995\n");
-               fprintf(ConfFile, "addnode=86.48.24.194:20995\n");
-               fclose(ConfFile);
+        s[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
     }
 
+    std::string str(s, 32);
+    fprintf(ConfFile, "rpcpassword=%s\n", str.c_str());
+    fprintf(ConfFile, "port=20995\n");
+    fprintf(ConfFile, "rpcport=20925\n");
+    fprintf(ConfFile, "rpcconnect=127.0.0.1\n");
+    fprintf(ConfFile, "rpcallowip=127.0.0.1\n");
+    fprintf(ConfFile, "addnode=172.105.121.51:20995\n");
+    fprintf(ConfFile, "addnode=173.230.156.35:20995\n");
+    fprintf(ConfFile, "addnode=45.56.105.176:20995\n");
+    fprintf(ConfFile, "addnode=209.126.82.242:20995\n");
+    fprintf(ConfFile, "addnode=86.48.24.194:20995\n");
+    fclose(ConfFile);
+}
+
+void StreamConfigFile(map<string, string>& mapSettingsRet,
+                    map<string, vector<string> >& mapMultiSettingsRet)
+{
     set<string> setOptions;
     setOptions.insert("*");
 
+    // TODO: remove boost in favor of C++11 file lookup/handling
+    boost::filesystem::ifstream streamConfig(GetConfigFile());
     for (boost::program_options::detail::config_file_iterator it(streamConfig, setOptions), end; it != end; ++it)
     {
         // Don't overwrite existing settings so command line settings override bitcoin.conf
@@ -1278,6 +1281,31 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
     // If datadir is changed in .conf file:
     ClearDatadirCache();
 }
+
+void ReadConfigFile()
+{
+    // Stream Conf file data
+    StreamConfigFile(mapArgs, mapMultiArgs);
+    // If datadir is changed in .conf file:
+    ClearDatadirCache();
+}
+
+void InitializeConfigFile()
+{
+    // TODO: remove boost in favor of C++11 file lookup/handling
+    boost::filesystem::ifstream streamConfig(GetConfigFile());
+    if (!streamConfig.good())
+    {
+        // Create FrogCoin.conf
+        BuildConfigFile();
+        // Then read it...
+        ReadConfigFile();
+    } else {
+        // Read FrogCoin.conf
+        ReadConfigFile();
+    }
+}
+
 
 boost::filesystem::path GetPidFile()
 {
