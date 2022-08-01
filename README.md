@@ -35,14 +35,12 @@ Specifications and General info
 ------------------
 FrogCoin uses 
 
-	libsecp256k1,
-	libgmp,
-	Boost1.74, OR Boost1.6+,  
-	Openssl1.02u,
-	OR OpenSSL1.1x,
-	Berkeley DB 6.2.32,
-	QT5.15.2,
-	to compile
+	libsecp256k1
+	libgmp
+	Boost1.74, OR Boost1.6+
+	Openssl1.02u, OR OpenSSL1.1.1q, OR OpenSSL3.0.5
+	Berkeley DB 6.2.32
+	QT5.15.2 (for GUI)
 
 
 General Specs
@@ -65,7 +63,7 @@ General Specs
 
 BUILD LINUX
 -----------
-### Compiling FrogCoin "SatoshiCore" daemon on Ubunutu 18.04 LTS Bionic
+### Compiling FrogCoin "SatoshiCore" daemon on Ubunutu 22.04 LTS (Jammy Jellyfish)
 ### Note: guide should be compatible with other Ubuntu versions from 14.04+
 
 ### Become poweruser
