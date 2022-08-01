@@ -63,7 +63,7 @@ General Specs
 
 BUILD LINUX
 -----------
-### Compiling FrogCoin "SatoshiCore" daemon on Ubunutu 22.04 LTS (Jammy Jellyfish)
+### Compiling FrogCoin "SatoshiCore" daemon on Ubuntu 22.04 LTS (Jammy Jellyfish)
 ### Note: guide should be compatible with other Ubuntu versions from 14.04+
 
 ### Become poweruser
