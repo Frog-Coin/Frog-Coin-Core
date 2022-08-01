@@ -116,7 +116,7 @@ void SettingsPage::on_encryptwallet_clicked()
 
 void SettingsPage::on_open_datafolder_clicked()
 {
-    filesystem::path path = GetDataDir();
+    boost::filesystem::path path = GetDataDir();
     QString pathString = QString::fromStdString(path.string());
     QDesktopServices::openUrl(QUrl::fromLocalFile(pathString));
 }
