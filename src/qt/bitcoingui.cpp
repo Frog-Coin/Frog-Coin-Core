@@ -1432,14 +1432,14 @@ void FrogCoinGUI::editConfig()
 
 void FrogCoinGUI::editConfigExt()
 {
-    filesystem::path path = GetConfigFile();
+    boost::filesystem::path path = GetConfigFile();
     QString pathString = QString::fromStdString(path.string());
     QDesktopServices::openUrl(QUrl::fromLocalFile(pathString));
 }
 
 void FrogCoinGUI::openDataDir()
 {
-    filesystem::path path = GetDataDir();
+    boost::filesystem::path path = GetDataDir();
     QString pathString = QString::fromStdString(path.string());
     QDesktopServices::openUrl(QUrl::fromLocalFile(pathString));
 }
