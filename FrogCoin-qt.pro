@@ -32,6 +32,11 @@ SECP256K1_INCLUDE_PATH=C:/deps/secp256k1/include
 SECP256K1_LIB_PATH=C:/deps/secp256k1
 }
 
+!win32 !macx{
+BDB_INCLUDE_PATH=/usr/local/BerkeleyDB.6.2/include
+BDB_LIB_PATH=/usr/local/BerkeleyDB.6.2/lib
+}
+
 # for boost 1.37, add -mt to the boost libraries
 # use: qmake BOOST_LIB_SUFFIX=-mt
 # for boost thread win32 with _win32 sufix
