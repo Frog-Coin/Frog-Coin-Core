@@ -148,6 +148,13 @@ Qt Dependencies build and link (2 of 2):
 wget https://fukuchi.org/works/qrencode/qrencode-4.0.2.tar.gz; tar zxfv qrencode-4.0.2.tar.gz; cd ~/qrencode-4.0.2; ./configure; make; sudo make install; sudo ldconfig
 ```
 
+Ubuntu Legacy Patch (Ubuntu 18.04 and older)
+```
+cp -r ~/FrogCoin/src/qt/forms/signverifymessagedialog.ui.legacy_qt ~/FrogCoin/src/qt/forms/signverifymessagedialog.ui
+cp -r ~/FrogCoin/src/qt/forms/rpcconsolesettings.ui.legacy_qt ~/FrogCoin/src/qt/forms/rpcconsolesettings.ui
+cp -r ~/FrogCoin/src/qt/forms/rpcconsole.ui.legacy_qt ~/FrogCoin/src/qt/forms/rpcconsole.ui
+```
+
 Build FrogCoin Qt
 ```
 cd ~/FrogCoin; qmake -qt=qt5 USE_UPNP=-; make
