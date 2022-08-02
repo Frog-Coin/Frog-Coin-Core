@@ -32,7 +32,7 @@ SECP256K1_INCLUDE_PATH=C:/deps/secp256k1/include
 SECP256K1_LIB_PATH=C:/deps/secp256k1
 }
 
-!win32 !macx{
+!win32:!macx{
 BDB_INCLUDE_PATH=/usr/local/BerkeleyDB.6.2/include
 BDB_LIB_PATH=/usr/local/BerkeleyDB.6.2/lib
 }
