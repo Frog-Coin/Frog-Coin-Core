@@ -95,30 +95,7 @@ cd ~; git clone https://github.com/Frog-Coin/Frog-Coin-Core FrogCoin
 cd ~; cd ~/FrogCoin/src; chmod a+x obj; chmod a+x leveldb/build_detect_platform; chmod a+x secp256k1; chmod a+x leveldb; chmod a+x ~/FrogCoin/src; chmod a+x ~/FrogCoin; make -f makefile.unix USE_UPNP=-; cd ~; cp -r ~/FrogCoin/src/FrogCoind /usr/local/bin/FrogCoind;
 ```
 
-### (Optional) Build FrogCoin-QT (GUI wallet) on Linux 
-
-**All previous steps must be completed first.**
-
-If you recompiling some other time you don't have to repeat previous steps, but need to define those variables. Skip this command if this is your first build and previous steps were performed in current terminal session.
-```
-export BDB_INCLUDE_PATH="/usr/local/BerkeleyDB.6.2/include"; export BDB_LIB_PATH="/usr/local/BerkeleyDB.6.2/lib"
-```
-
-With UPNP:
-
-```
-cd ~; cd ~/FrogCoin; qmake -qt=qt5; make
-```
-
-**Recommended Without** UPNP:
-
-```
-cd ~; cd ~/FrogCoin; qmake -qt=qt5 USE_UPNP=-; make
-```
-
-
-
-### Create config file for daemon
+### Create config file (for daemon, DO NOT USE FOR QT)
 ```
 cd ~; sudo ufw allow 20995/tcp; sudo ufw allow 20925/tcp; sudo ufw allow 22/tcp; sudo mkdir ~/.FROG; cat << "CONFIG" >> ~/.FROG/FrogCoin.conf
 listen=1
@@ -145,6 +122,35 @@ chmod 700 ~/.FROG/FrogCoin.conf; chmod 700 ~/.FROG; ls -la ~/.FROG
 ### Run FrogCoin daemon
 ```
 cd ~; FrogCoind; FrogCoind getinfo
+```
+
+### (Optional) Build FrogCoin-QT (GUI wallet) on Linux 
+
+**All previous steps must be completed first.**
+(If you recompiling some other time you don't have to repeat previous steps.)
+
+Install Qt dependencies:
+```
+sudo apt-get install -y qtcreator qtbase5-dev qttools5-dev qttools5-dev-tools qt5-qmake cmake
+```
+
+Install extended dependencies:
+```
+sudo apt-get install -y autoconf autotools-dev pkg-config zlib1g-dev
+```
+
+Qt Dependencies build and link (1 of 2):
+```
+wget https://ppa.launchpadcontent.net/linuxuprising/libpng12/ubuntu/pool/main/libp/libpng/libpng_1.2.54.orig.tar.xz; tar Jxfv libpng_1.2.54.orig.tar.xz; cd ~/libpng-1.2.54; ./configure; make; sudo make install; cd ~; sudo ln -s /usr/local/lib/libpng12.so.0.54.0 /usr/lib/libpng12.so; sudo ln -s /usr/local/lib/libpng12.so.0.54.0 /usr/lib/libpng12.so.0
+```
+Qt Dependencies build and link (2 of 2):
+```
+wget https://fukuchi.org/works/qrencode/qrencode-4.0.2.tar.gz; tar zxfv qrencode-4.0.2.tar.gz; cd ~/qrencode-4.0.2; ./configure; make; sudo make install; sudo ldconfig
+```
+
+Build FrogCoin Qt
+```
+cd ~/FrogCoin; qmake -qt=qt5 USE_UPNP=-; make
 ```
 
 ### Troubleshooting
