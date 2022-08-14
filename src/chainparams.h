@@ -74,6 +74,7 @@ public:
     int PoolMaxTransactions() const { return nPoolMaxTransactions; }
     std::string MNenginePoolDummyAddress() const { return strMNenginePoolDummyAddress; }
     std::string DevOpsAddress() const { return strDevOpsAddress; }
+    std::string PASfeeAddress() const { return strPASfeeAddress; }
 protected:
     CChainParams() {/* Do Nothing */;}
 
@@ -94,6 +95,7 @@ protected:
     int nPoolMaxTransactions;
     std::string strMNenginePoolDummyAddress;
     std::string strDevOpsAddress;
+    std::string strPASfeeAddress;
 };
 
 /**

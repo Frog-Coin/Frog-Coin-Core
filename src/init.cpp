@@ -563,6 +563,9 @@ bool AppInit2(boost::thread_group& threadGroup)
     //log startup time for advanced Masternode checks delay (required for proper sync)
     nMasterNodeChecksDelayBaseTime = GetTime();
 
+    //ignore pubkeyaliasservices below protocol version
+    nPubkeyaliasserviceMinProtocol = GetArg("-pasminprotocol", MIN_PASERVICE_PROTO_VERSION);
+
     if (fDaemon)
         fprintf(stdout, "FrogCoin server starting\n"); 
 

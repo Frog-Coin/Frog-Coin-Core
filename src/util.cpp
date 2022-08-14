@@ -88,6 +88,7 @@ int nLiquidityProvider = 0;
 /** Spork enforcement enabled time */
 int64_t enforceMasternodePaymentsTime = 4085657524;
 int nMasternodeMinProtocol = 0;
+int nPubkeyaliasserviceMinProtocol = 0;
 bool fSucessfullyLoaded = false;
 bool fEnableMNengine = false;
 //Standard features

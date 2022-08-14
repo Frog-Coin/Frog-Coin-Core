@@ -32,6 +32,8 @@ static const int64_t MNengine_COLLATERAL = (1 * COIN);
 static const int64_t MNengine_POOL_MAX = (999 * COIN);
 /** MasterNode required collateral */
 inline int64_t MasternodeCollateral(int nHeight) { return 75000; } // ON (75,000 FROG)
+/** PubkeyAliasService required fee */
+inline int64_t PubkeyaliasserviceFEE(int nHeight) { return 75; } // ON (75 FROG)
 /** Coinbase transaction outputs can only be staked after this number of new blocks (network rule) */
 static const int nStakeMinConfirmations = 60;
 /** Coinbase transaction outputs can only be spent after this number of new blocks (network rule) */
