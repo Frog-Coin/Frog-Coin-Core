@@ -24,7 +24,7 @@ class uint256;
 #define PUBKEYALIASSERVICE_SYNC_IN_PROCESS             8
 
 #define PUBKEYALIASSERVICE_MIN_CONFIRMATIONS           7
-#define PUBKEYALIASSERVICE_EXPIRATION_SECONDS          (5*60)
+#define PUBKEYALIASSERVICE_EXPIRATION_SECONDS          (31600000)// 365 Days
 #define PUBKEYALIASSERVICE_REMOVAL_SECONDS             (7*60)
 
 using namespace std;
@@ -55,13 +55,12 @@ public:
         PUBKEYALIASSERVICE_POS_ERROR = 5
     };
 
-    CTxIn vin;  
-    CService addr;
+    CTxIn vin;
     CPubKey pubkey;
     int activeStatePAS;
     int cacheInputAge;
     int cacheInputAgeBlock;
-    bool unitTestPAS;
+    bool ioTestPAS;
     int protocolVersion;
     int nScanningErrorCount;
     int nLastScanningErrorBlockHeight;
@@ -69,7 +68,7 @@ public:
 
     CPubkeyaliasservice();
     CPubkeyaliasservice(const CPubkeyaliasservice& other);
-    CPubkeyaliasservice(CService newAddr, CTxIn newVin, CPubKey newPubkey, int64_t newRegTime, int protocolVersionIn);
+    CPubkeyaliasservice(CTxIn newVin, CPubKey newPubkey, int64_t newRegTime, int protocolVersionIn);
 
 
     void swap(CPubkeyaliasservice& first, CPubkeyaliasservice& second) // nothrow
@@ -80,12 +79,11 @@ public:
         // by swapping the members of two classes,
         // the two classes are effectively swapped
         swap(first.vin, second.vin);
-        swap(first.addr, second.addr);
         swap(first.pubkey, second.pubkey);
         swap(first.regTime, second.regTime);
         swap(first.cacheInputAge, second.cacheInputAge);
         swap(first.cacheInputAgeBlock, second.cacheInputAgeBlock);
-        swap(first.unitTestPAS, second.unitTestPAS);
+        swap(first.ioTestPAS, second.ioTestPAS);
         swap(first.protocolVersion, second.protocolVersion);
         swap(first.nScanningErrorCount, second.nScanningErrorCount);
         swap(first.nLastScanningErrorBlockHeight, second.nLastScanningErrorBlockHeight);
@@ -116,13 +114,12 @@ public:
                 unsigned char nVersion = 0;
                 READWRITE(nVersion);
                 READWRITE(vin);
-                READWRITE(addr);
                 READWRITE(pubkey);
                 READWRITE(regTime);
                 READWRITE(activeStatePAS);
                 READWRITE(cacheInputAge);
                 READWRITE(cacheInputAgeBlock);
-                READWRITE(unitTestPAS);
+                READWRITE(ioTestPAS);
                 READWRITE(protocolVersion);
                 READWRITE(nScanningErrorCount);
                 READWRITE(nLastScanningErrorBlockHeight);

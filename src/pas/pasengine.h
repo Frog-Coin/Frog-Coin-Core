@@ -12,6 +12,11 @@
 
 class CTxIn;
 class CFrogCoinAddress;
+class CPASenginePool;
+class CPASengineAssociator;
+
+extern CPASenginePool pasEnginePool;
+extern CPASengineAssociator pasEngineAssociator;
 
 /** Helper object for checking inputs of fees paid
  */

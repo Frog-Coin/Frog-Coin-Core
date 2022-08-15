@@ -1011,6 +1011,19 @@ bool AppInit2(boost::thread_group& threadGroup)
 
     SecureMsgStart(fNoSmsg, GetBoolArg("-smsgscanchain", false));
 
+    // ********************************************************* Step 10.6: startup pubkey alias service
+
+    // Check for Pubkey Alias Service toggle
+    uiInterface.InitMessage(_("Checking Pubkey-Alias-Service feature toggle..."));
+    fPubkeyAliasService = GetBoolArg("-paservice", false);
+    LogPrintf("Checking for Pubkey-Alias-Service feature toggle...\n");
+    if(fPubkeyAliasService) {
+        LogPrintf("Continuing with Pubkey-Alias-Service ENABLED\n");
+    } else {
+        // Pubkey-Alias-Service disabled
+        LogPrintf("Continuing with Pubkey-Alias-Service DISABLED\n");
+    }
+
     // ********************************************************* Step 11: start node
 
     if (!CheckDiskSpace())

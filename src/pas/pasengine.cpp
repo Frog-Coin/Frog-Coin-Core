@@ -21,6 +21,11 @@
 using namespace std;
 using namespace boost;
 
+// The main object for accessing pasengine
+CPASenginePool pasEnginePool;
+// A helper object for associating messages from Pubkeyaliasservice
+CPASengineAssociator pasEngineAssociator;
+
 bool CPASenginePool::IsBlockchainSynced()
 {
     static bool fBlockchainSynced = false;

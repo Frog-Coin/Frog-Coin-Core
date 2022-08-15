@@ -123,6 +123,8 @@ bool settingsStatus = false;
 bool fDemiNodes = false;
 // Properly handle enforcement for MN checks
 int64_t nMasterNodeDelay = (15 * 60);
+//Pubkey Alias Service toggle
+bool fPubkeyAliasService = false;
 
 // Init OpenSSL library multithreading support
 static CCriticalSection** ppmutexOpenSSL;

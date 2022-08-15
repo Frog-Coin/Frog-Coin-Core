@@ -5,7 +5,6 @@
 #include "main.h"
 #include "sync.h"
 #include "util.h"
-#include "addrman.h"
 
 #include "init.h"// TODO: If crashes check this
 
@@ -60,13 +59,12 @@ CPubkeyaliasservice::CPubkeyaliasservice()
 {
     LOCK(cs);
     vin = CTxIn();
-    addr = CService();
     pubkey = CPubKey();
     activeStatePAS = PUBKEYALIASSERVICE_ENABLED;
     regTime = GetAdjustedTime();
     cacheInputAge = 0;
     cacheInputAgeBlock = 0;
-    unitTestPAS = false;
+    ioTestPAS = false;
     protocolVersion = MIN_PEER_PROTO_VERSION;
     nScanningErrorCount = 0;
     nLastScanningErrorBlockHeight = 0;
@@ -76,29 +74,27 @@ CPubkeyaliasservice::CPubkeyaliasservice(const CPubkeyaliasservice& other)
 {
     LOCK(cs);
     vin = other.vin;
-    addr = other.addr;
     pubkey = other.pubkey;
     activeStatePAS = other.activeStatePAS;
     regTime = other.regTime;
     cacheInputAge = other.cacheInputAge;
     cacheInputAgeBlock = other.cacheInputAgeBlock;
-    unitTestPAS = other.unitTestPAS;
+    ioTestPAS = other.ioTestPAS;
     protocolVersion = other.protocolVersion;
     nScanningErrorCount = other.nScanningErrorCount;
     nLastScanningErrorBlockHeight = other.nLastScanningErrorBlockHeight;
 }
 
-CPubkeyaliasservice::CPubkeyaliasservice(CService newAddr, CTxIn newVin, CPubKey newPubkey, int64_t newRegTime, int protocolVersionIn)
+CPubkeyaliasservice::CPubkeyaliasservice(CTxIn newVin, CPubKey newPubkey, int64_t newRegTime, int protocolVersionIn)
 {
     LOCK(cs);
     vin = newVin;
-    addr = newAddr;
     pubkey = newPubkey;
     activeStatePAS = PUBKEYALIASSERVICE_ENABLED;
     regTime = newRegTime;
     cacheInputAge = 0;
     cacheInputAgeBlock = 0;
-    unitTestPAS = false;
+    ioTestPAS = false;
     protocolVersion = protocolVersionIn;
     nScanningErrorCount = 0;
     nLastScanningErrorBlockHeight = 0;
@@ -121,12 +117,12 @@ void CPubkeyaliasservice::Check()
         return;
     }
 
-    if(!UpdatedWithin(PUBKEYALIASSERVICE_EXPIRATION_SECONDS)){
+    if((regTime + PUBKEYALIASSERVICE_EXPIRATION_SECONDS) < GetTime()) {
         activeStatePAS = PUBKEYALIASSERVICE_EXPIRED;
         return;
     }
 
-    if(!unitTestPAS){
+    if(!ioTestPAS){// bool is always false, TODO: handle previously verified PAS entries better
         CValidationState state;
         CScript pas_addr;
         CTransaction txVin;
@@ -135,7 +131,7 @@ void CPubkeyaliasservice::Check()
         if(pubkey.IsValid()) {
             pas_addr = GetScriptForDestination(pubkey.GetID());
         } else {
-            LogPrintf("CreateNewBlock(): Failed to detect PASfee address to pay\n");
+            LogPrintf("CreateNewBlock(): Failed to detect PASfee address \n");
         }
         if(GetTransaction(vin.prevout.hash, txVin, hash)) {
             BOOST_FOREACH(CTxOut out, txVin.vout){

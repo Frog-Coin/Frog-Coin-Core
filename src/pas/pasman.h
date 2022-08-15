@@ -119,10 +119,19 @@ public:
 
     std::vector<CPubkeyaliasservice> GetFullPubkeyaliasserviceVector() { CheckPAS(); return vPubkeyaliasservices; }
 
+    void ProcessMessagePAS(CNode* pfrom, std::string& strCommand, CDataStream& vRecv);
+
     // Return the number of (unique) pubkeyaliasservices
     int size() { return vPubkeyaliasservices.size(); }
 
     std::string ToString() const;
+
+    //
+    // Relay Pubkeyaliasservice Messages
+    //
+
+    void RelayPubkeyaliasserviceEntry(const CTxIn vin, const int64_t nregTime, const CPubKey pubkey, const int count, const int protocolVersion);
+    void RelayPubkeyaliasserviceEntryPing(const CTxIn vin, const int64_t nregTime, const bool stop);
 
 };
 

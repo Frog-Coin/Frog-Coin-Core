@@ -161,6 +161,8 @@ extern bool settingsStatus;
 extern bool fDemiNodes;
 // Properly handle enforcement for MN checks
 extern int64_t nMasterNodeDelay;
+// Pubkey Alias Service toggle
+extern bool fPubkeyAliasService;
 
 void RandAddSeed();
 void RandAddSeedPerfmon();
