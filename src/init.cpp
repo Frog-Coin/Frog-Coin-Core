@@ -311,6 +311,9 @@ std::string HelpMessage()
     strUsage += "  -demipeerlimit=<n> " + _("Allow/Deny blocks from peers using legacy clients/wallets, (0-1, default: 0") + "\n";
     strUsage += "  -demireorgtype=<n> " + _("Allow/Deny reorganize requests from peers as well as Demi-nodes, (0-1, default: 0") + "\n";
 
+    strUsage += "\n" + _("Pubkey-Alias-Service feature options:") + "\n";
+    strUsage += "  -paservice=<n> " + _("Toggle Pubkey-Alias-Service features on/off, (0-1, default: 0") + "\n";
+
     return strUsage;
 }
 

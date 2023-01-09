@@ -1,5 +1,5 @@
-// Copyright (c) 2022 The CryptoCoderz Team / Espers project
-// Copyright (c) 2022 The FrogCoin Project
+// Copyright (c) 2022-2023 The CryptoCoderz Team / Espers project
+// Copyright (c) 2022-2023 The FrogCoin Project
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
