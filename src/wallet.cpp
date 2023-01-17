@@ -1789,7 +1789,7 @@ bool CWallet::SelectCoinsCollateral(std::vector<CTxIn>& setCoinsRet, int64_t& nV
 
     BOOST_FOREACH(const COutput& out, vCoins)
     {
-        // collateral inputs will always be a multiple of DARSEND_COLLATERAL, up to five
+        // collateral inputs will always be a multiple of DARKSEND_COLLATERAL, up to five
         if(IsCollateralAmount(out.tx->vout[out.i].nValue))
         {
             CTxIn vin = CTxIn(out.tx->GetHash(),out.i);

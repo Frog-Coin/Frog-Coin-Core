@@ -214,5 +214,7 @@ extern json_spirit::Value smsgoutbox(const json_spirit::Array& params, bool fHel
 extern json_spirit::Value smsgbuckets(const json_spirit::Array& params, bool fHelp);
 
 extern json_spirit::Value cclistcoins(const json_spirit::Array& params, bool fHelp);
+// PAS Features
+extern json_spirit::Value pubkeyaliasservicelist(const json_spirit::Array& params, bool fHelp);
 
 #endif

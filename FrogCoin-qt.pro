@@ -481,6 +481,7 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/deminode/demimodule.cpp \
     src/deminode/deminet.cpp \
     src/deminode/demisync.cpp \
+    src/rpcpasengine.cpp \
     src/pas/pas.cpp \
     src/pas/pasengine.cpp \
     src/pas/pasman.cpp

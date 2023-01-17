@@ -200,6 +200,7 @@ public:
         isOldNode = status;
     }
     
+    //TODO: Check and remove unused functions
     inline uint64_t SliceHash(uint256& hash, int slice)
     {
         uint64_t n = 0;
