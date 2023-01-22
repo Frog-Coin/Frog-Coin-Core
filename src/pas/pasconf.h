@@ -1,11 +1,10 @@
-// Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2016-2023 The CryptoCoderz Team / Espers project
+// Copyright (c) 2022-2023 The CryptoCoderz Team / Espers project
 // Copyright (c) 2022-2023 The FrogCoin Project
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SRC_MASTERNODECONFIG_H_
-#define SRC_MASTERNODECONFIG_H_
+#ifndef SRC_PASCONF_H_
+#define SRC_PASCONF_H_
 
 #include <string>
 #include <vector>
@@ -13,17 +12,17 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
-class CMasternodeConfig;
-extern CMasternodeConfig masternodeConfig;
+class CPASConfig;
+extern CPASConfig pasConfig;
 
-boost::filesystem::path GetMasternodeConfigFile();
+boost::filesystem::path GetPASConfigFile();
 
-class CMasternodeConfig
+class CPASConfig
 {
 
 public:
 
-    class CMasternodeEntry {
+    class CPASEntry {
 
     private:
         std::string alias;
@@ -33,7 +32,7 @@ public:
         std::string outputIndex;
     public:
 
-        CMasternodeEntry(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex) {
+        CPASEntry(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex) {
             this->alias = alias;
             this->ip = ip;
             this->privKey = privKey;
@@ -82,23 +81,23 @@ public:
         }
     };
 
-    CMasternodeConfig() {
-        entries = std::vector<CMasternodeEntry>();
+    CPASConfig() {
+        entries = std::vector<CPASEntry>();
     }
 
     void clear();
     bool read(boost::filesystem::path path);
     void add(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex);
 
-    std::vector<CMasternodeEntry>& getEntries() {
+    std::vector<CPASEntry>& getEntries() {
         return entries;
     }
 
 private:
-    std::vector<CMasternodeEntry> entries;
+    std::vector<CPASEntry> entries;
 
 
 };
 
 
-#endif /* SRC_MASTERNODECONFIG_H_ */
+#endif /* SRC_PASCONF_H_ */

@@ -7,16 +7,10 @@
 #include "chain.h"
 #include "db.h"
 #include "init.h"
-//
-//TODO: add pas registration handling...
-// (Originally activemasternode.cpp)
-//#include "pas/pasreg.h"
-//
+
+#include "pas/pasregister.h"
 #include "pas/pasman.h"
-//
-//TODO: add pas config handling...
-//#include "pas/pasconfig.h"
-//
+#include "pas/pasconf.h"
 #include "rpcserver.h"
 #include <boost/lexical_cast.hpp>
 #include "util.h"
@@ -33,9 +27,9 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
         strCommand = params[0].get_str();
 
     if (fHelp  ||
-        (strCommand != "count" && strCommand != "current" && strCommand != "debug" && strCommand != "genkey" && strCommand != "enforce" && strCommand != "list" && strCommand != "list-conf"
+        (strCommand != "count" && strCommand != "debug" && strCommand != "genkey" && strCommand != "enforce" && strCommand != "list" && strCommand != "list-conf"
         	&& strCommand != "start" && strCommand != "start-alias" && strCommand != "start-many" && strCommand != "status" && strCommand != "stop" && strCommand != "stop-alias"
-                && strCommand != "stop-many" && strCommand != "winners" && strCommand != "connect" && strCommand != "outputs" && strCommand != "vote-many" && strCommand != "vote"))
+                && strCommand != "stop-many" && strCommand != "outputs"))
         throw runtime_error(
                 "pubkeyaliasservice \"command\"... ( \"passphrase\" )\n"
                 "Set of commands to execute pubkeyaliasservice related actions\n"
@@ -61,7 +55,7 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
 
     if (strCommand == "stop")
     {
-        if(!fMasterNode) return "you must set pubkeyaliasservice=1 in the configuration";
+        if(!fPubkeyAliasService) return "you must set pubkeyaliasservice=1 in the configuration";
 
         if(pwalletMain->IsLocked()) {
             SecureString strWalletPass;
@@ -80,13 +74,13 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
         }
 
         std::string errorMessage;
-        //if(!activeMasternode.StopMasterNode(errorMessage)) {
-        //	return "stop failed: " + errorMessage;
-        //}
+        if(!pasReg.StopPaService(errorMessage)) {
+            return "stop failed: " + errorMessage;
+        }
         pwalletMain->Lock();
 
-        //if(activeMasternode.status == MASTERNODE_STOPPED) return "successfully stopped pubkeyaliasservice";
-        //if(activeMasternode.status == MASTERNODE_NOT_CAPABLE) return "not capable pubkeyaliasservice";
+        if(pasReg.status == PUBKEYALIASSERVICE_STOPPED) return "successfully stopped pubkeyaliasservice";
+        if(pasReg.status == PUBKEYALIASSERVICE_NOT_CAPABLE) return "not capable pubkeyaliasservice";
 
         return "unknown";
     }
@@ -120,21 +114,33 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
 
 		Object statusObj;
 		statusObj.push_back(Pair("alias", alias));
-        /*
-    	BOOST_FOREACH(CMasternodeConfig::CMasternodeEntry mne, pubkeyaliasserviceConfig.getEntries()) {
-    		if(mne.getAlias() == alias) {
-    			found = true;
-    			std::string errorMessage;
-    			bool result = activeMasternode.StopMasterNode(mne.getIp(), mne.getPrivKey(), errorMessage);
+
+        BOOST_FOREACH(CPASConfig::CPASEntry pae, pasConfig.getEntries()) {
+            CTxIn vin;
+            CPubKey pubKeyFeeAddress;
+            CKey keyFeeAddress;
+            std::string errorMessage;
+
+            //TODO: Account for output index!!!
+            if(!pasReg.GetPaServiceVin(vin, pubKeyFeeAddress, keyFeeAddress)) {
+                errorMessage = "could not allocate vin";
+                LogPrintf("CPASregister::Register() - Error: %s\n", errorMessage.c_str());
+                return false;
+            }
+            if(pae.getAlias() == alias) {
+                found = true;
+                errorMessage = "";
+                bool result = pasReg.StopPaService(vin, errorMessage);
 
 				statusObj.push_back(Pair("result", result ? "successful" : "failed"));
     			if(!result) {
+                    errorMessage = "Failed to stop alias service! Error: CX0";
    					statusObj.push_back(Pair("errorMessage", errorMessage));
    				}
     			break;
     		}
     	}
-        */
+
     	if(!found) {
     		statusObj.push_back(Pair("result", "failed"));
     		statusObj.push_back(Pair("errorMessage", "could not find alias in config. Verify with list-conf."));
@@ -143,7 +149,7 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
     	pwalletMain->Lock();
     	return statusObj;
     }
-    /*
+
     if (strCommand == "stop-many")
     {
     	if(pwalletMain->IsLocked()) {
@@ -169,14 +175,25 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
 
 		Object resultsObj;
 
-		BOOST_FOREACH(CMasternodeConfig::CMasternodeEntry mne, pubkeyaliasserviceConfig.getEntries()) {
+        BOOST_FOREACH(CPASConfig::CPASEntry pae, pasConfig.getEntries()) {
 			total++;
 
-			std::string errorMessage;
-			bool result = activeMasternode.StopMasterNode(mne.getIp(), mne.getPrivKey(), errorMessage);
+            CTxIn vin;
+            CPubKey pubKeyFeeAddress;
+            CKey keyFeeAddress;
+            std::string errorMessage;
+
+            //TODO: Account for output index!!!
+            if(!pasReg.GetPaServiceVin(vin, pubKeyFeeAddress, keyFeeAddress)) {
+                errorMessage = "could not allocate vin";
+                LogPrintf("CPASregister::Register() - Error: %s\n", errorMessage.c_str());
+                return false;
+            }
+
+            bool result = pasReg.StopPaService(vin, errorMessage);
 
 			Object statusObj;
-			statusObj.push_back(Pair("alias", mne.getAlias()));
+            statusObj.push_back(Pair("alias", pae.getAlias()));
 			statusObj.push_back(Pair("result", result ? "successful" : "failed"));
 
 			if(result) {
@@ -198,7 +215,7 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
 		return returnObj;
 
     }
-    */
+
     if (strCommand == "list")
     {
         Array newParams(params.size() - 1);
@@ -220,7 +237,7 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
         }
         return paserviceman.size();
     }
-    /*
+
     if (strCommand == "start")
     {
         if(!fMasterNode) return "you must set pubkeyaliasservice=1 in the configuration";
@@ -241,24 +258,22 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
             }
         }
 
-        if(activeMasternode.status != MASTERNODE_REMOTELY_ENABLED && activeMasternode.status != MASTERNODE_IS_CAPABLE){
-            activeMasternode.status = MASTERNODE_NOT_PROCESSED; // TODO: consider better way
+        if(pasReg.status != PUBKEYALIASSERVICE_IS_CAPABLE){
+            pasReg.status = PUBKEYALIASSERVICE_NOT_PROCESSED; // TODO: consider better way
             std::string errorMessage;
-            activeMasternode.ManageStatus();
+            pasReg.ManageStatus();
             pwalletMain->Lock();
         }
 
-        if(activeMasternode.status == MASTERNODE_REMOTELY_ENABLED) return "pubkeyaliasservice started remotely";
-        if(activeMasternode.status == MASTERNODE_INPUT_TOO_NEW) return "pubkeyaliasservice input must have at least 15 confirmations";
-        if(activeMasternode.status == MASTERNODE_STOPPED) return "pubkeyaliasservice is stopped";
-        if(activeMasternode.status == MASTERNODE_IS_CAPABLE) return "successfully started pubkeyaliasservice";
-        if(activeMasternode.status == MASTERNODE_NOT_CAPABLE) return "not capable pubkeyaliasservice: " + activeMasternode.notCapableReason;
-        if(activeMasternode.status == MASTERNODE_SYNC_IN_PROCESS) return "sync in process. Must wait until client is synced to start.";
+        if(pasReg.status == PUBKEYALIASSERVICE_INPUT_TOO_NEW) return "pubkeyaliasservice input must have at least 15 confirmations";
+        if(pasReg.status == PUBKEYALIASSERVICE_STOPPED) return "pubkeyaliasservice is stopped";
+        if(pasReg.status == PUBKEYALIASSERVICE_IS_CAPABLE) return "successfully started pubkeyaliasservice";
+        if(pasReg.status == PUBKEYALIASSERVICE_NOT_CAPABLE) return "not capable pubkeyaliasservice: " + pasReg.notCapableReason;
+        if(pasReg.status == PUBKEYALIASSERVICE_SYNC_IN_PROCESS) return "sync in process. Must wait until client is synced to start.";
 
         return "unknown";
     }
-    */
-    /*
+
     if (strCommand == "start-alias")
     {
 	    if (params.size() < 2){
@@ -289,14 +304,14 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
 		Object statusObj;
 		statusObj.push_back(Pair("alias", alias));
 
-    	BOOST_FOREACH(CMasternodeConfig::CMasternodeEntry mne, pubkeyaliasserviceConfig.getEntries()) {
-    		if(mne.getAlias() == alias) {
+        BOOST_FOREACH(CPASConfig::CPASEntry pae, pasConfig.getEntries()) {
+            if(pae.getAlias() == alias) {
     			found = true;
     			std::string errorMessage;
                 std::string strDonateAddress = "";
                 std::string strDonationPercentage = "";
 
-                bool result = activeMasternode.Register(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), strDonateAddress, strDonationPercentage, errorMessage);
+                bool result = pasReg.Register(pae.getTxHash(), pae.getOutputIndex(), errorMessage);
   
                 statusObj.push_back(Pair("result", result ? "successful" : "failed"));
     			if(!result) {
@@ -315,8 +330,7 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
     	return statusObj;
 
     }
-    */
-    /*
+
     if (strCommand == "start-many")
     {
     	if(pwalletMain->IsLocked()) {
@@ -335,8 +349,8 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
 			}
 		}
 
-		std::vector<CMasternodeConfig::CMasternodeEntry> mnEntries;
-		mnEntries = pubkeyaliasserviceConfig.getEntries();
+        std::vector<CPASConfig::CPASEntry> paEntries;
+        paEntries = pasConfig.getEntries();
 
 		int total = 0;
 		int successful = 0;
@@ -344,17 +358,17 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
 
 		Object resultsObj;
 
-		BOOST_FOREACH(CMasternodeConfig::CMasternodeEntry mne, pubkeyaliasserviceConfig.getEntries()) {
+        BOOST_FOREACH(CPASConfig::CPASEntry pae, pasConfig.getEntries()) {
 			total++;
 
 			std::string errorMessage;
             std::string strDonateAddress = "";
             std::string strDonationPercentage = "";
 
-            bool result = activeMasternode.Register(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), strDonateAddress, strDonationPercentage, errorMessage);
+            bool result = pasReg.Register(pae.getTxHash(), pae.getOutputIndex(), errorMessage);
 
 			Object statusObj;
-			statusObj.push_back(Pair("alias", mne.getAlias()));
+            statusObj.push_back(Pair("alias", pae.getAlias()));
 			statusObj.push_back(Pair("result", result ? "succesful" : "failed"));
 
 			if(result) {
@@ -375,21 +389,20 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
 
 		return returnObj;
     }
-    */
+
     if (strCommand == "debug")
     {
-        //if(activeMasternode.status == MASTERNODE_REMOTELY_ENABLED) return "pubkeyaliasservice started remotely";
-        //if(activeMasternode.status == MASTERNODE_INPUT_TOO_NEW) return "pubkeyaliasservice input must have at least 15 confirmations";
-        //if(activeMasternode.status == MASTERNODE_IS_CAPABLE) return "successfully started pubkeyaliasservice";
-        //if(activeMasternode.status == MASTERNODE_STOPPED) return "pubkeyaliasservice is stopped";
-        //if(activeMasternode.status == MASTERNODE_NOT_CAPABLE) return "not capable pubkeyaliasservice: " + activeMasternode.notCapableReason;
-        //if(activeMasternode.status == MASTERNODE_SYNC_IN_PROCESS) return "sync in process. Must wait until client is synced to start.";
+        if(pasReg.status == PUBKEYALIASSERVICE_INPUT_TOO_NEW) return "pubkeyaliasservice input must have at least 15 confirmations";
+        if(pasReg.status == PUBKEYALIASSERVICE_IS_CAPABLE) return "successfully started pubkeyaliasservice";
+        if(pasReg.status == PUBKEYALIASSERVICE_STOPPED) return "pubkeyaliasservice is stopped";
+        if(pasReg.status == PUBKEYALIASSERVICE_NOT_CAPABLE) return "not capable pubkeyaliasservice: " + pasReg.notCapableReason;
+        if(pasReg.status == PUBKEYALIASSERVICE_SYNC_IN_PROCESS) return "sync in process. Must wait until client is synced to start.";
 
         CTxIn vin = CTxIn();
-        //CPubKey pubkey = CScript();
+        CPubKey pubkey = CScript();
         CKey key;
         //TODO: engage active checks once pas registration is done...
-        bool found = false;//activeMasternode.GetMasterNodeVin(vin, pubkey, key);
+        bool found = pasReg.GetPaServiceVin(vin, pubkey, key);
         if(!found){
             return "Missing pubkeyaliasservice input, please look at the documentation for instructions on pubkeyaliasservice creation";
         } else {
@@ -416,21 +429,19 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
         return "Not implemented yet, please look at the documentation for instructions on pubkeyaliasservice version enforcement";
     }
 
-    /*
     if(strCommand == "list-conf")
     {
-    	std::vector<CMasternodeConfig::CMasternodeEntry> mnEntries;
-    	mnEntries = pubkeyaliasserviceConfig.getEntries();
+        std::vector<CPASConfig::CPASEntry> paEntries;
+        paEntries = pasConfig.getEntries();
 
         Object resultObj;
 
-        BOOST_FOREACH(CMasternodeConfig::CMasternodeEntry mne, pubkeyaliasserviceConfig.getEntries()) {
+        BOOST_FOREACH(CPASConfig::CPASEntry pae, pasConfig.getEntries()) {
     		Object mnObj;
-    		mnObj.push_back(Pair("alias", mne.getAlias()));
-    		mnObj.push_back(Pair("address", mne.getIp()));
-    		mnObj.push_back(Pair("privateKey", mne.getPrivKey()));
-    		mnObj.push_back(Pair("txHash", mne.getTxHash()));
-    		mnObj.push_back(Pair("outputIndex", mne.getOutputIndex()));
+            mnObj.push_back(Pair("alias", pae.getAlias()));
+            mnObj.push_back(Pair("privateKey", pae.getPrivKey()));
+            mnObj.push_back(Pair("txHash", pae.getTxHash()));
+            mnObj.push_back(Pair("outputIndex", pae.getOutputIndex()));
     		resultObj.push_back(Pair("pubkeyaliasservice", mnObj));
     	}
 
@@ -439,7 +450,7 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
 
     if (strCommand == "outputs"){
         // Find possible candidates
-        vector<COutput> possibleCoins = activeMasternode.SelectCoinsMasternode();
+        vector<COutput> possibleCoins = pasReg.SelectCoinsPaservice();
 
         Object obj;
         BOOST_FOREACH(COutput& out, possibleCoins) {
@@ -452,28 +463,26 @@ Value pubkeyaliasservice(const Array& params, bool fHelp)
 
     if(strCommand == "status")
     {
-        std::vector<CMasternodeConfig::CMasternodeEntry> mnEntries;
-        mnEntries = pubkeyaliasserviceConfig.getEntries();
+        std::vector<CPASConfig::CPASEntry> paEntries;
+        paEntries = pasConfig.getEntries();
 
         CScript pubkey;
-        pubkey = GetScriptForDestination(activeMasternode.pubKeyMasternode.GetID());
+        pubkey = GetScriptForDestination(pasReg.pubKeyPaservice.GetID());
         CTxDestination address1;
         ExtractDestination(pubkey, address1);
         CFrogCoinAddress address2(address1);
 
         Object mnObj;
-        CMasternode *pmn = mnodeman.Find(activeMasternode.vin);
+        CPubkeyaliasservice *ppas = paserviceman.Find(pasReg.vin);
 
-        mnObj.push_back(Pair("vin", activeMasternode.vin.ToString().c_str()));
-        mnObj.push_back(Pair("service", activeMasternode.service.ToString().c_str()));
-        mnObj.push_back(Pair("status", activeMasternode.status));
-        //mnObj.push_back(Pair("pubKeyMasternode", address2.ToString().c_str()));
-        if (pmn) mnObj.push_back(Pair("pubkey", CFrogCoinAddress(pmn->pubkey.GetID()).ToString()));
-        mnObj.push_back(Pair("notCapableReason", activeMasternode.notCapableReason.c_str()));
+        mnObj.push_back(Pair("vin", pasReg.vin.ToString().c_str()));
+        mnObj.push_back(Pair("status", pasReg.status));
+        if (ppas) mnObj.push_back(Pair("pubkey", CFrogCoinAddress(ppas->pubkey.GetID()).ToString()));
+        mnObj.push_back(Pair("notCapableReason", pasReg.notCapableReason.c_str()));
 
         return mnObj;
     }
-    */
+
     return Value::null;
 }
 

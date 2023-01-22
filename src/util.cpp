@@ -1198,13 +1198,6 @@ boost::filesystem::path GetConfigFile()
     return pathConfigFile;
 }
 
-boost::filesystem::path GetMasternodeConfigFile()
-{
-    boost::filesystem::path pathConfigFile(GetArg("-mnconf", "masternode.conf"));
-    if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir() / pathConfigFile;
-    return pathConfigFile;
-}
-
 // Create config for 4k displays
 boost::filesystem::path GetDPIConfigFile()
 {

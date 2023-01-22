@@ -1,31 +1,30 @@
-// Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2016-2023 The CryptoCoderz Team / Espers project
+// Copyright (c) 2022-2023 The CryptoCoderz Team / Espers project
 // Copyright (c) 2022-2023 The FrogCoin Project
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "masternodeconfig.h"
+#include "pasconf.h"
 //TODO: remove linking once converted to Deminode handling below
 #include <base58.h>
 
-CMasternodeConfig masternodeConfig;
+CPASConfig pasConfig;
 
 //TODO: Convert read function to match Deminodes (std vs boost)
-boost::filesystem::path GetMasternodeConfigFile()
+boost::filesystem::path GetPASConfigFile()
 {
-    boost::filesystem::path pathConfigFile(GetArg("-mnconf", "masternode.conf"));
+    boost::filesystem::path pathConfigFile(GetArg("-pasconf", "pas.conf"));
     if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir() / pathConfigFile;
     return pathConfigFile;
 }
 
-void CMasternodeConfig::add(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex) {
-    CMasternodeEntry cme(alias, ip, privKey, txHash, outputIndex);
-    entries.push_back(cme);
+void CPASConfig::add(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex) {
+    CPASEntry cpe(alias, ip, privKey, txHash, outputIndex);
+    entries.push_back(cpe);
 }
 
 //TODO: Convert read function to match Deminodes (std vs boost)
-bool CMasternodeConfig::read(boost::filesystem::path path) {
-    boost::filesystem::ifstream streamConfig(GetMasternodeConfigFile());
+bool CPASConfig::read(boost::filesystem::path path) {
+    boost::filesystem::ifstream streamConfig(GetPASConfigFile());
     if (!streamConfig.good()) {
         return true; // No masternode.conf file is OK
     }

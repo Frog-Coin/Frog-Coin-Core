@@ -541,7 +541,7 @@ void FrogCoinGUI::createToolBars()
 
 void FrogCoinGUI::setClientModel(ClientModel *clientModel)
 {
-    netLabel->setText("v1.1.0.1");// Version in GUI
+    netLabel->setText("v1.1.0.3");// Version in GUI
 
     this->clientModel = clientModel;
     if(clientModel)
