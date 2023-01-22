@@ -268,6 +268,10 @@ static const CRPCCommand vRPCCommands[] =
     { "spork",                  &spork,                  true,      false,      false },
     { "masternode",             &masternode,             true,      false,      true },
     { "masternodelist",         &masternodelist,         true,      false,      false },
+
+/* Masternode features */
+    { "paservice",             &pubkeyaliasservice,      true,      false,      true },
+    { "paservicelist",         &pubkeyaliasservicelist,  true,      false,      false },
     
 #ifdef ENABLE_WALLET
     { "getmininginfo",          &getmininginfo,          true,      false,     false },

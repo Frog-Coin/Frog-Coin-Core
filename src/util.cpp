@@ -88,6 +88,7 @@ int nLiquidityProvider = 0;
 /** Spork enforcement enabled time */
 int64_t enforceMasternodePaymentsTime = 4085657524;
 int nMasternodeMinProtocol = 0;
+int nPubkeyaliasserviceMinProtocol = 0;
 bool fSucessfullyLoaded = false;
 bool fEnableMNengine = false;
 //Standard features
@@ -122,6 +123,8 @@ bool settingsStatus = false;
 bool fDemiNodes = false;
 // Properly handle enforcement for MN checks
 int64_t nMasterNodeDelay = (15 * 60);
+//Pubkey Alias Service toggle
+bool fPubkeyAliasService = false;
 
 // Init OpenSSL library multithreading support
 static CCriticalSection** ppmutexOpenSSL;
@@ -1192,13 +1195,6 @@ boost::filesystem::path GetConfigFile()
 {
     boost::filesystem::path pathConfigFile(GetArg("-conf", "FrogCoin.conf"));
     if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir(false) / pathConfigFile;
-    return pathConfigFile;
-}
-
-boost::filesystem::path GetMasternodeConfigFile()
-{
-    boost::filesystem::path pathConfigFile(GetArg("-mnconf", "masternode.conf"));
-    if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir() / pathConfigFile;
     return pathConfigFile;
 }
 

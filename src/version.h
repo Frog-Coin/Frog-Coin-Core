@@ -30,7 +30,7 @@ static const int DATABASE_VERSION = 70509;
 //
 // network protocol versioning
 //
-static const int PROTOCOL_VERSION = 62041;
+static const int PROTOCOL_VERSION = 62042;
 
 // intial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
@@ -41,6 +41,9 @@ static const int MIN_PEER_PROTO_VERSION = 62040;
 // minimum peer version accepted by MNenginePool
 static const int MIN_POOL_PEER_PROTO_VERSION = 62040;
 static const int MIN_INSTANTX_PROTO_VERSION = 62040;
+
+// minimum peer version accepted by PAS
+static const int MIN_PASERVICE_PROTO_VERSION = 62042;
 
 //! minimum peer version that can receive masternode payments
 // V1 - Last protocol version before update

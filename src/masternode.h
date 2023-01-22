@@ -13,7 +13,6 @@
 #include "base58.h"
 #include "main.h"
 #include "script.h"
-#include "masternode.h"
 
 class uint256;
 
@@ -201,6 +200,7 @@ public:
         isOldNode = status;
     }
     
+    //TODO: Check and remove unused functions
     inline uint64_t SliceHash(uint256& hash, int slice)
     {
         uint64_t n = 0;

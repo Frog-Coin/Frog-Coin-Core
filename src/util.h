@@ -127,6 +127,7 @@ extern bool fEnableMNengine;
 extern int64_t enforceMasternodePaymentsTime;
 extern std::string strMasterNodeAddr;
 extern int nMasternodeMinProtocol;
+extern int nPubkeyaliasserviceMinProtocol;
 extern int keysLoaded;
 extern bool fSucessfullyLoaded;
 extern std::map<std::string, std::string> mapArgs;
@@ -160,6 +161,8 @@ extern bool settingsStatus;
 extern bool fDemiNodes;
 // Properly handle enforcement for MN checks
 extern int64_t nMasterNodeDelay;
+// Pubkey Alias Service toggle
+extern bool fPubkeyAliasService;
 
 void RandAddSeed();
 void RandAddSeedPerfmon();
@@ -254,7 +257,6 @@ bool RenameOver(boost::filesystem::path src, boost::filesystem::path dest);
 boost::filesystem::path GetDefaultDataDir();
 const boost::filesystem::path &GetDataDir(bool fNetSpecific = true);
 boost::filesystem::path GetConfigFile();
-boost::filesystem::path GetMasternodeConfigFile();
 boost::filesystem::path GetPidFile();
 #ifndef WIN32
 void CreatePidFile(const boost::filesystem::path &path, pid_t pid);

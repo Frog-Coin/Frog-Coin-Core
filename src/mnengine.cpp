@@ -1237,7 +1237,7 @@ void ThreadCheckMNenginePool()
                 CleanTransactionLocksList();
             }
 
-            //if(c % MASTERNODES_DUMP_SECONDS == 0) DumpMasternodes();
+            if(c % MASTERNODES_DUMP_SECONDS == 0) DumpMasternodes();
 
             mnEnginePool.CheckTimeout();
             mnEnginePool.CheckForCompleteQueue();

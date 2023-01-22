@@ -1,7 +1,7 @@
 // Copyright (c) 2014 The Cryptocoin FrogCoinival Foundation
-// Copyright (c) 2015-2020 The CryptoCoderz Team / Espers
-// Copyright (c) 2018-2020 The Rubix Project
-// Copyright (c) 2022 The FrogCoin project
+// Copyright (c) 2015-2023 The CryptoCoderz Team / Espers
+// Copyright (c) 2018-2023 The Rubix Project
+// Copyright (c) 2022-2023 The FrogCoin project
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 

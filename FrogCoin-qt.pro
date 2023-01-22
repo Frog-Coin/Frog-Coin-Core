@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = FrogCoin-qt
-VERSION = 1.1.0.1
+VERSION = 1.1.0.3
 INCLUDEPATH += src src/json src/qt src/qt/plugins/mrichtexteditor
 QT += core gui widgets network printsupport
 DEFINES += ENABLE_WALLET
@@ -352,7 +352,12 @@ HEADERS += src/qt/bitcoingui.h \
     src/limitedmap.h \
     src/deminode/demimodule.h \
     src/deminode/deminet.h \
-    src/deminode/demisync.h
+    src/deminode/demisync.h \
+    src/pas/pas.h \
+    src/pas/pasengine.h \
+    src/pas/pasman.h \
+    src/pas/pasconf.h \
+    src/pas/pasregister.h
 
 SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/qt/transactiontablemodel.cpp \
@@ -477,7 +482,13 @@ SOURCES += src/qt/bitcoin.cpp src/qt/bitcoingui.cpp \
     src/crypto/common/echo.c \
     src/deminode/demimodule.cpp \
     src/deminode/deminet.cpp \
-    src/deminode/demisync.cpp
+    src/deminode/demisync.cpp \
+    src/rpcpasengine.cpp \
+    src/pas/pas.cpp \
+    src/pas/pasengine.cpp \
+    src/pas/pasman.cpp \
+    src/pas/pasconf.cpp \
+    src/pas/pasregister.cpp
 
 RESOURCES += \
     src/qt/bitcoin.qrc
