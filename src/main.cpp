@@ -3089,8 +3089,9 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock)
     }
 
     // Preliminary checks
-    if (!pblock->CheckBlock())
+    if (!pblock->CheckBlock()) {
         return error("ProcessBlock() : CheckBlock FAILED");
+    }
 
     // Set peer address for AcceptBlock() checks
     //
@@ -3175,16 +3176,8 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock)
         mapOrphanBlocksByPrev.erase(hashPrev);
     }
 
-    // Check block against Velocity parameters
-    if(Velocity_check(pindexBest->nHeight))
-    {
-        // Announce Velocity constraint failure
-        if(!Velocity(pindexBest, pblock, true))
-        {
-            Misbehaving(pfrom->GetId(), 25);
-            return error("ProcessBlock() : Velocity rejected block %d, required parameters not met", mapBlockIndex[hash]->nHeight);
-        }
-    }
+    // Velocity is checked in AcceptBlock()
+    //
 
     // Try to get frist masternode in our list
     CMasternode* winningNode = mnodeman.GetCurrentMasterNode(1);
