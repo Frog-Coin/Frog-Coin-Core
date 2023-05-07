@@ -2543,11 +2543,14 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
             return DoS(100, error("CheckBlock() : more than one coinbase"));
     
     // Second transaction can be coinstake, the rest must not be
-    // (Proof of Stake is checked in below if(IsProofOfStake()) function
-    for (unsigned int i = 2; i < vtx.size(); i++)
-        if (vtx[i].IsCoinStake())
+    // Proof of Stake is checked in below if(IsProofOfStake()) function
+    for (unsigned int i = 2; i < vtx.size(); i++) {
+        if (vtx[i].IsCoinStake()) {
             return DoS(100, error("CheckBlock() : more than one coinstake"));
+        }
+    }
 
+    // Check proof of stake
     if (IsProofOfStake())
     {
         // Coinbase output should be empty if proof-of-stake block
@@ -2557,6 +2560,15 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
         // Second transaction must be coinstake
         if (vtx.empty() || !vtx[1].IsCoinStake())
             return DoS(100, error("CheckBlock() : second tx is not coinstake"));
+    }
+    // proof of work block must not contain coinstake
+    else
+    {
+        for (unsigned int i = 1; i < vtx.size(); i++) {
+            if (vtx[i].IsCoinStake()) {
+                return DoS(100, error("CheckBlock() : proof of work block contains coinstake"));
+            }
+        }
     }
 
     // Check proof-of-stake block signature
