@@ -146,9 +146,10 @@ extern bool fLogTimestamps;
 extern volatile bool fReopenDebugLog;
 //Live fork toggle
 extern std::string strLiveForkToggle;
+extern int64_t nLiveForkToggle;// TODO: just have dependent functions create a non-extern within
+                               // their respective functions (start cleaning up externs)
 //Roll back to block
 extern std::string strRollbackToBlock;
-extern int64_t nLiveForkToggle;
 //MasterNode recipient verification delay base time
 extern int64_t nMasterNodeChecksDelayBaseTime;
 //MasterNode peer IP advanced relay system toggle
